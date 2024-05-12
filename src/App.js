@@ -1,12 +1,10 @@
-import SignupPage from "./signup";
-import Sign from "./sign";
-import Login from "./login";
+import React from "react";
+import { RouterProvider } from "react-router-dom";
+import router from "./routes/routes";
 
 function App() {
   return (
-    <div>
-      <Login />
-    </div>
+    <RouterProvider router={router} />
   );
 }
 

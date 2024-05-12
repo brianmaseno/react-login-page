@@ -1,15 +1,27 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost/my-signup-app', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+mongoose.connect(
+  "mongodb+srv://brianmayoga:brianmayoga@cluster0.enablmd.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0/?myapp",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
+
+// Function to check MongoDB connection status
+mongoose.connection.on("connected", () => {
+  console.log("Connected to MongoDB");
+});
+
+mongoose.connection.on("error", (err) => {
+  console.log("Error connecting to MongoDB:", err);
 });
 
 // Define a user schema
@@ -20,26 +32,26 @@ const userSchema = new mongoose.Schema({
 });
 
 // Create a user model
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("Students", userSchema);
 
 // API endpoint for signup
-app.post('/signup', async (req, res) => {
+app.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ error: 'User already exists' });
+      return res.status(400).json({ error: "User already exists" });
     }
 
     // Create a new user
     const newUser = new User({ name, email, password });
     await newUser.save();
 
-    res.status(201).json({ message: 'User created successfully' });
+    res.status(201).json({ message: "User created successfully" });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
